@@ -21,7 +21,7 @@ import {
   Tag,
   Center,
   Text,
-  Select, Tr,
+  Select, Tr, Breadcrumb, BreadcrumbItem, BreadcrumbLink,
 } from "@chakra-ui/react";
 import {
   useGetClientBillingPartsQuery,
@@ -195,11 +195,13 @@ const BasicInfo = ({data}) => {
   const files = useGetFilesQuery({folderId: folderId});
   const [formattedFiles, setFormattedFiles] = React.useState([]);
   const [filePath, setFilePath] = React.useState([]);
+  const [textFilePath, setTextFilePath] = React.useState([]);
   const [approvals, setApprovals] = React.useState([]);
 
   React.useEffect(() => {
     if (filePath.length === 0) {
       setFilePath([...filePath, data.folder.sharepointId]);
+      setTextFilePath([...textFilePath, data.basicInfo.name]);
     }
   }, [data, setFilePath, filePath]);
 
@@ -211,7 +213,7 @@ const BasicInfo = ({data}) => {
         createdtime: new Date(file["createdDateTime"]).toLocaleString(),
         createdby: file["createdBy"].user.displayName,
         viewFile: file.hasOwnProperty("file") ? webURL => viewFile(webURL) : null,
-        navigateToFolder: file.hasOwnProperty("folder") ? (destID) => navigateToFolder(destID) : null,
+        navigateToFolder: file.hasOwnProperty("folder") ? (destID, name) => navigateToFolder(destID, name) : null,
       })));
     }
   }, [files, setFormattedFiles]);
@@ -225,12 +227,14 @@ const BasicInfo = ({data}) => {
     }
   }, [data.approvals, setApprovals]);
 
-  const navigateToFolder = (destID) => {
+  const navigateToFolder = (destID, name) => {
     if (filePath.includes(destID)) {
       setFilePath(filePath.filter(x => x !== destID));
       setFolderId(filePath[filePath.length - 2]);
+      setTextFilePath(textFilePath.filter(x => x !== name));
     } else {
       setFilePath(prevFilePath => [...prevFilePath, destID]);
+      setTextFilePath(prevFilePath => [...prevFilePath, name]);
       setFolderId(destID);
     }
   }
@@ -242,9 +246,19 @@ const BasicInfo = ({data}) => {
           variant="outline"
           aria-label="add client"
           icon={<FiArrowLeft/>}
-          onClick={() => navigateToFolder(filePath[filePath.length - 1])}
+          onClick={() => navigateToFolder(filePath[filePath.length - 1], textFilePath[textFilePath.length - 1])}
           margin={"2"}
+          disabled={filePath.length === 1}
         />
+        <Breadcrumb>
+          {textFilePath.map((item, index) => (
+            <BreadcrumbItem key={index}>
+              <BreadcrumbLink>
+                {item}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          ))}
+        </Breadcrumb>
       </HStack>
     </React.Fragment>
   );

@@ -1,6 +1,7 @@
-import {Divider, HStack, TableContainer, Table, Tbody, Td, Text, Th, Thead, Tr, Select} from "@chakra-ui/react";
+import {Divider, HStack, TableContainer, Table, Tbody, Td, Text, Th, Thead, Tr, Select, Icon} from "@chakra-ui/react";
 import React from "react";
 import {redirect} from "next/navigation";
+import {FiFile, FiFolder} from "react-icons/fi";
 
 export default function CustomTable({
   title,
@@ -39,6 +40,9 @@ export default function CustomTable({
 
       <Table variant={"simple"}>
           <Tr>
+            {title === "Files" &&
+              <Th w={8}></Th>
+            }
             {headerRow.map(column => (
               <Th key={column}>{column}</Th>
             ))}
@@ -49,7 +53,12 @@ export default function CustomTable({
           {data && true && data.map((item, index) => {
             if (item.hasOwnProperty("folder") && fileTable) {
               return (
-                <Tr key={key} onClick={() => item.navigateToFolder(item.id)} _hover={{cursor: "pointer", opacity: 0.5}}>
+                <Tr key={key} onClick={() => item.navigateToFolder(item.id, item.name)} _hover={{cursor: "pointer", opacity: 0.5}}>
+                  <Td>
+                    <Icon>
+                      <FiFolder size={25} />
+                    </Icon>
+                  </Td>
                   {cellKeys.map(cell => (
                     <Td key={item}>{item[cell]}</Td>
                   ))}
@@ -58,6 +67,11 @@ export default function CustomTable({
             } else if (item.hasOwnProperty("file") && fileTable) {
               return (
                 <Tr key={key} onClick={() => window.open(item.webUrl, "_blank")} _hover={{cursor: "pointer", opacity: 0.5}}>
+                  <Td>
+                    <Icon>
+                      <FiFile size={25} />
+                    </Icon>
+                  </Td>
                   {cellKeys.map(cell => (
                     <Td key={item}>{item[cell]}</Td>
                   ))}
