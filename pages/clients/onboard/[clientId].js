@@ -353,6 +353,8 @@ const ProgramDetails = ({selections, data}) => {
     }
   }
 
+  console.log(data)
+
   return (
     <CustomTable
       title={"Information"}
@@ -361,8 +363,8 @@ const ProgramDetails = ({selections, data}) => {
         question: questions[program][index],
         response: value === 1 ? "Yes" : value === 0 ? "No" : value
       }))}
-      cellKeys={["name", "title", "phone", "email"]}
-      key={"name"}
+      cellKeys={["question", "response"]}
+      key={"question"}
       dropdownHeader={true}
       dropdownPlaceholder={"Select a Program"}
       dropdownOptions={Object.keys(selections).filter(program => selections[program] === 1).map(program => program[0].toUpperCase() + program.slice(1))}

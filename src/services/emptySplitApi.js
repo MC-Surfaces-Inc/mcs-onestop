@@ -2,7 +2,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
 export const emptySplitApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.ONBOARD_API_URL,
+    baseUrl: 'https://onboard.mcsurfacesinc.com/admin',
     mode: "cors",
   }),
   endpoints: () => ({}),

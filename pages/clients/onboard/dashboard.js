@@ -178,6 +178,8 @@ export default function Dashboard() {
     }
   }
 
+  console.log(data)
+
   return (
     <Layout>
       <TabHeader title={"Clients"}/>
